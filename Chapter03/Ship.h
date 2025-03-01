@@ -23,7 +23,7 @@ private:
 	ShipState mState;
 
 
-	class InputComponent* mMove;
+	class InputComponent* mInput;
 	class SpriteComponent* mSc;
 
 	float mLaserCooldown;
