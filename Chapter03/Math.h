@@ -256,7 +256,7 @@ public:
 
 	// Transform vector by matrix
 	static Vector2 Transform(const Vector2& vec, const class Matrix3& mat, float w = 1.0f);
-	static float CalcAngle(const Vector2& from, const Vector2& to);
+	static float CalcAngle(const Vector2& vec1, const Vector2& vec2);
 
 	static const Vector2 Zero;
 	static const Vector2 UnitX;

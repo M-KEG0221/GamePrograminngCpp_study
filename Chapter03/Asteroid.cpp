@@ -38,8 +38,9 @@ Asteroid::Asteroid(Game* game)
 	mCircle = new CircleComponent(this);
 	mCircle->SetRadius(40.0f);
 
-	//deltaTIme‚ª’Ç‰Á‚Å1‰ñæŽZ‚³‚ê‚é•ªA1/60•b‚Å‚©‚¯‚éŒ‚—Í‚ð‹­‰»‚·‚é
-	mMove->AddForce(initialSpeed * 60);
+	// deltaTIme‚ª’Ç‰Á‚Å1‰ñæŽZ‚³‚ê‚é•ªA1/60•b‚Å‚©‚¯‚éŒ‚—Í‚ð‹­‰»‚·‚é
+	mMove->AddForce();
+	//mMove->AddForce(initialSpeed * 60);
 
 	// Add to mAsteroids in game
 	game->AddAsteroid(this);
