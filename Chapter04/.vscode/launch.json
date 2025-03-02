@@ -1,0 +1,23 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run MySolution",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Debug/Game.exe",  // 出力された実行ファイルのパス
+            "args": [],              // 必要な引数があれば追加
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",  // 作業ディレクトリ
+            "environment": [
+                // Visual Studioで設定している環境変数を必要に応じて追加
+            ],
+            "externalConsole": false, // 内蔵コンソールで実行するかどうか
+            "MIMode": "gdb", // cursorが追加してみろって言ったから追加したんだ！！
+            "miDebuggerPath": "C:/Program Files (x86)/mingw64/bin/gcc.exe"  // お使いの環境に合わせてGDBのパスを設定
+        }
+    ]
+}

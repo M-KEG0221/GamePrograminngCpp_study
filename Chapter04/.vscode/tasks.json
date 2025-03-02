@@ -1,0 +1,19 @@
+// ChatGPT
+// https://chatgpt.com/share/67c32058-ed30-800a-8361-8d5a1341ae50
+
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build solution",
+        "type": "shell",
+        "command": "cmake --build build --config Debug",  // Debugビルドの場合
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": "$msCompile"
+      }
+    ]
+  }
+  
