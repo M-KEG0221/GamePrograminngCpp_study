@@ -8,6 +8,8 @@
 
 #pragma once
 #include <vector>
+#include <unordered_map>
+#include <string>
 #include "Math.h"
 class Actor
 {
@@ -40,15 +42,24 @@ public:
 	State GetState() const { return mState; }
 	void SetState(State state) { mState = state; }
 
+	int GetCurrAnimState() const { return mCurrAnimState; }
+
 	class Game* GetGame() { return mGame; }
 
 
 	// Add/remove components
 	void AddComponent(class Component* component);
 	void RemoveComponent(class Component* component);
+protected:
+	//課題2 複数アニメーションに対応させる
+	void SetCurrAnimState(int currAnimState) { mCurrAnimState = currAnimState; }
+
 private:
 	// Actor's state
 	State mState;
+
+	//課題2 複数アニメーションに対応させる
+	int mCurrAnimState;
 
 	// Transform
 	Vector2 mPosition;

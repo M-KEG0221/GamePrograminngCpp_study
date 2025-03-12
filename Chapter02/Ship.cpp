@@ -12,18 +12,54 @@
 
 Ship::Ship(Game* game)
 	:Actor(game)
-	,mRightSpeed(0.0f)
-	,mDownSpeed(0.0f)
+	, mRightSpeed(0.0f)
+	, mDownSpeed(0.0f)
 {
 	// Create an animated sprite component
 	AnimSpriteComponent* asc = new AnimSpriteComponent(this);
-	std::vector<SDL_Texture*> anims = {
+
+	std::vector<SDL_Texture*> ship = {
 		game->GetTexture("Assets/Ship01.png"),
 		game->GetTexture("Assets/Ship02.png"),
 		game->GetTexture("Assets/Ship03.png"),
 		game->GetTexture("Assets/Ship04.png"),
 	};
-	asc->SetAnimTextures(anims);
+
+	asc->RegisterAnimation(ShipAnim::ship, ship);
+
+	std::vector<SDL_Texture*> walk = {
+		game->GetTexture("Assets/Character01.png"),
+		game->GetTexture("Assets/Character02.png"),
+		game->GetTexture("Assets/Character03.png"),
+		game->GetTexture("Assets/Character04.png"),
+		game->GetTexture("Assets/Character05.png"),
+		game->GetTexture("Assets/Character06.png"),
+	};
+	asc->RegisterAnimation(ShipAnim::walk, walk);
+
+	std::vector<SDL_Texture*> jump = {
+		game->GetTexture("Assets/Character07.png"),
+		game->GetTexture("Assets/Character08.png"),
+		game->GetTexture("Assets/Character09.png"),
+		game->GetTexture("Assets/Character10.png"),
+		game->GetTexture("Assets/Character11.png"),
+		game->GetTexture("Assets/Character12.png"),
+		game->GetTexture("Assets/Character13.png"),
+		game->GetTexture("Assets/Character14.png"),
+		game->GetTexture("Assets/Character15.png"),
+	};
+	asc->RegisterAnimation(ShipAnim::jump, jump);
+
+	std::vector<SDL_Texture*> punch = {
+		game->GetTexture("Assets/Character16.png"),
+		game->GetTexture("Assets/Character17.png"),
+		game->GetTexture("Assets/Character18.png"),
+	};
+	asc->RegisterAnimation(ShipAnim::punch, punch, false);
+
+	//空のアニメーション登録時、例外処理が走る
+	std::vector<SDL_Texture*> fake;
+	asc->RegisterAnimation(4, fake);
 }
 
 void Ship::UpdateActor(float deltaTime)
@@ -75,4 +111,24 @@ void Ship::ProcessKeyboard(const uint8_t* state)
 	{
 		mDownSpeed -= 300.0f;
 	}
+
+
+	if (state[SDL_SCANCODE_0])
+	{
+		SetCurrAnimState(ShipAnim::ship);
+	}
+	if (state[SDL_SCANCODE_1])
+	{
+		SetCurrAnimState(ShipAnim::walk);
+	}
+	if (state[SDL_SCANCODE_2])
+	{
+		SetCurrAnimState(ShipAnim::jump);
+	}
+	if (state[SDL_SCANCODE_3])
+	{
+		SetCurrAnimState(ShipAnim::punch);
+	}
+
+
 }
