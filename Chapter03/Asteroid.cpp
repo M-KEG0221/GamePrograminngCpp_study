@@ -12,10 +12,11 @@
 #include "Game.h"
 #include "Random.h"
 #include "CircleComponent.h"
+#include <iostream>
 
 Asteroid::Asteroid(Game* game)
 	:Actor(game)
-	,mCircle(nullptr)
+	, mCircle(nullptr)
 {
 	// Initialize to random position/orientation
 	Vector2 randPos = Random::GetVector(Vector2::Zero,
@@ -29,12 +30,17 @@ Asteroid::Asteroid(Game* game)
 	sc->SetTexture(game->GetTexture("Assets/Asteroid.png"));
 
 	// Create a move component, and set a forward speed
-	MoveComponent* mc = new MoveComponent(this);
-	mc->SetForwardSpeed(150.0f);
+	float initialSpeed = 150.0f;
+	mMove = new MoveComponent(this);
+	mMove->SetForwardSpeed(initialSpeed);
 
 	// Create a circle component (for collision)
 	mCircle = new CircleComponent(this);
 	mCircle->SetRadius(40.0f);
+
+	// deltaTIme‚ª’Ç‰Á‚Å1‰ñæŽZ‚³‚ê‚é•ªA1/60•b‚Å‚©‚¯‚éŒ‚—Í‚ð‹­‰»‚·‚é
+	mMove->AddForce();
+	//mMove->AddForce(initialSpeed * 60);
 
 	// Add to mAsteroids in game
 	game->AddAsteroid(this);
