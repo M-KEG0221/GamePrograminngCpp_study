@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
+//
 // Released under the BSD License
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
@@ -14,24 +14,56 @@
 #include "Tile.h"
 #include "CircleComponent.h"
 #include <algorithm>
+#include "AIState.h"
+#include "AIComponent.h"
 
-Enemy::Enemy(class Game* game)
-:Actor(game)
+using EAIState = AIState::EAIState;
+
+Enemy::Enemy(class Game *game)
+	: Actor(game)
 {
 	// Add to enemy vector
 	game->GetEnemies().emplace_back(this);
-	
-	SpriteComponent* sc = new SpriteComponent(this);
+
+	SpriteComponent *sc = new SpriteComponent(this);
 	sc->SetTexture(game->GetTexture("Assets/Airplane.png"));
 	// Set position at start tile
 	SetPosition(GetGame()->GetGrid()->GetStartTile()->GetPosition());
 	// Setup a nav component at the start tile
-	NavComponent* nc = new NavComponent(this);
-	nc->SetForwardSpeed(150.0f);
-	nc->StartPath(GetGame()->GetGrid()->GetStartTile());
+	mNav = new NavComponent(this);
+	mForwardSpeed = 150.0f;
+	mNav->SetForwardSpeed(mForwardSpeed);
+	mNav->StartPath(GetGame()->GetGrid()->GetStartTile());
 	// Setup a circle for collision
 	mCircle = new CircleComponent(this);
 	mCircle->SetRadius(25.0f);
+
+	InitializeAIStates();
+}
+
+void Enemy::InitializeAIStates()
+{
+	/*
+	cursorの自動推論が、コンストラクタにあったコードを以下のように完全に推測できていた
+	すげぇ。
+	*/
+
+	mAI = new AIComponent(this);
+
+	auto *investigate = new AIInvestigate(mAI);
+	investigate->SetCallBackEnter([this]()
+								  { HandleEnterInvestigate(); });
+	mAI->RegisterState(investigate);
+
+	auto *beingRepaired = new AIBeingRepaired(mAI, 5.0f);
+	beingRepaired->SetCallBackEnter([this]()
+									{ HandleEnterBeingRepaired(); });
+	mAI->RegisterState(beingRepaired);
+
+	auto *death = new AIDeath(mAI);
+	mAI->RegisterState(death);
+
+	mAI->ChangeState(EAIState::Investigate);
 }
 
 Enemy::~Enemy()
@@ -46,11 +78,37 @@ Enemy::~Enemy()
 void Enemy::UpdateActor(float deltaTime)
 {
 	Actor::UpdateActor(deltaTime);
-	
-	// Am I near the end tile?
-	Vector2 diff = GetPosition() - GetGame()->GetGrid()->GetEndTile()->GetPosition();
-	if (Math::NearZero(diff.Length(), 10.0f))
-	{
-		SetState(EDead);
-	}
+
+	mAI->Update(deltaTime);
 }
+
+void Enemy::OnHitBullet()
+{
+	mAI->ChangeState(EAIState::BeingRepaired);
+}
+
+bool Enemy::IsAllowTargeting()
+{
+	return mAI->GetCurrentStateEnum() != AIState::EAIState::BeingRepaired;
+}
+
+void Enemy::StopMove()
+{
+	mNav->SetForwardSpeed(0.0f);
+}
+
+void Enemy::StartMove()
+{
+	mNav->SetForwardSpeed(mForwardSpeed);
+}
+
+void Enemy::HandleEnterBeingRepaired()
+{
+	StopMove();
+	mIsResurrected = true;
+};
+
+void Enemy::HandleEnterInvestigate()
+{
+	StartMove();
+};

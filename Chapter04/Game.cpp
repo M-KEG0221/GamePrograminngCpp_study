@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
+//
 // Released under the BSD License
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
@@ -17,36 +17,32 @@
 #include "AIState.h"
 
 Game::Game()
-:mWindow(nullptr)
-,mRenderer(nullptr)
-,mIsRunning(true)
-,mUpdatingActors(false)
+	: mWindow(nullptr), mRenderer(nullptr), mIsRunning(true), mUpdatingActors(false)
 {
-	
 }
 
 bool Game::Initialize()
 {
-	if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 	{
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
 		return false;
 	}
-	
+
 	mWindow = SDL_CreateWindow("Game Programming in C++ (Chapter 4)", 100, 100, 1024, 768, 0);
 	if (!mWindow)
 	{
 		SDL_Log("Failed to create window: %s", SDL_GetError());
 		return false;
 	}
-	
+
 	mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (!mRenderer)
 	{
 		SDL_Log("Failed to create renderer: %s", SDL_GetError());
 		return false;
 	}
-	
+
 	if (IMG_Init(IMG_INIT_PNG) == 0)
 	{
 		SDL_Log("Unable to initialize SDL_image: %s", SDL_GetError());
@@ -56,7 +52,7 @@ bool Game::Initialize()
 	LoadData();
 
 	mTicksCount = SDL_GetTicks();
-	
+
 	return true;
 }
 
@@ -77,23 +73,23 @@ void Game::ProcessInput()
 	{
 		switch (event.type)
 		{
-			case SDL_QUIT:
-				mIsRunning = false;
-				break;
+		case SDL_QUIT:
+			mIsRunning = false;
+			break;
 		}
 	}
-	
-	const Uint8* keyState = SDL_GetKeyboardState(NULL);
+
+	const Uint8 *keyState = SDL_GetKeyboardState(NULL);
 	if (keyState[SDL_SCANCODE_ESCAPE])
 	{
 		mIsRunning = false;
 	}
-	
+
 	if (keyState[SDL_SCANCODE_B])
 	{
 		mGrid->BuildTower();
 	}
-	
+
 	// Process mouse
 	int x, y;
 	Uint32 buttons = SDL_GetMouseState(&x, &y);
@@ -140,7 +136,7 @@ void Game::UpdateGame()
 	mPendingActors.clear();
 
 	// Add any dead actors to a temp vector
-	std::vector<Actor*> deadActors;
+	std::vector<Actor *> deadActors;
 	for (auto actor : mActors)
 	{
 		if (actor->GetState() == Actor::EDead)
@@ -160,7 +156,7 @@ void Game::GenerateOutput()
 {
 	SDL_SetRenderDrawColor(mRenderer, 34, 139, 34, 255);
 	SDL_RenderClear(mRenderer);
-	
+
 	// Draw all sprite components
 	for (auto sprite : mSprites)
 	{
@@ -175,14 +171,14 @@ void Game::LoadData()
 	mGrid = new Grid(this);
 
 	// For testing AIComponent
-	//Actor* a = new Actor(this);
-	//AIComponent* aic = new AIComponent(a);
+	// Actor* a = new Actor(this);
+	// AIComponent* aic = new AIComponent(a);
 	//// Register states with AIComponent
-	//aic->RegisterState(new AIPatrol(aic));
-	//aic->RegisterState(new AIDeath(aic));
-	//aic->RegisterState(new AIAttack(aic));
+	// aic->RegisterState(new AIPatrol(aic));
+	// aic->RegisterState(new AIDeath(aic));
+	// aic->RegisterState(new AIAttack(aic));
 	//// Start in patrol state
-	//aic->ChangeState("Patrol");
+	// aic->ChangeState("Patrol");
 }
 
 void Game::UnloadData()
@@ -202,9 +198,9 @@ void Game::UnloadData()
 	mTextures.clear();
 }
 
-SDL_Texture* Game::GetTexture(const std::string& fileName)
+SDL_Texture *Game::GetTexture(const std::string &fileName)
 {
-	SDL_Texture* tex = nullptr;
+	SDL_Texture *tex = nullptr;
 	// Is the texture already in the map?
 	auto iter = mTextures.find(fileName);
 	if (iter != mTextures.end())
@@ -214,7 +210,7 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 	else
 	{
 		// Load from file
-		SDL_Surface* surf = IMG_Load(fileName.c_str());
+		SDL_Surface *surf = IMG_Load(fileName.c_str());
 		if (!surf)
 		{
 			SDL_Log("Failed to load texture file %s", fileName.c_str());
@@ -244,7 +240,7 @@ void Game::Shutdown()
 	SDL_Quit();
 }
 
-void Game::AddActor(Actor* actor)
+void Game::AddActor(Actor *actor)
 {
 	// If we're updating actors, need to add to pending
 	if (mUpdatingActors)
@@ -257,7 +253,7 @@ void Game::AddActor(Actor* actor)
 	}
 }
 
-void Game::RemoveActor(Actor* actor)
+void Game::RemoveActor(Actor *actor)
 {
 	// Is it in pending actors?
 	auto iter = std::find(mPendingActors.begin(), mPendingActors.end(), actor);
@@ -278,15 +274,15 @@ void Game::RemoveActor(Actor* actor)
 	}
 }
 
-void Game::AddSprite(SpriteComponent* sprite)
+void Game::AddSprite(SpriteComponent *sprite)
 {
 	// Find the insertion point in the sorted vector
 	// (The first element with a higher draw order than me)
 	int myDrawOrder = sprite->GetDrawOrder();
 	auto iter = mSprites.begin();
-	for ( ;
-		iter != mSprites.end();
-		++iter)
+	for (;
+		 iter != mSprites.end();
+		 ++iter)
 	{
 		if (myDrawOrder < (*iter)->GetDrawOrder())
 		{
@@ -298,32 +294,36 @@ void Game::AddSprite(SpriteComponent* sprite)
 	mSprites.insert(iter, sprite);
 }
 
-void Game::RemoveSprite(SpriteComponent* sprite)
+void Game::RemoveSprite(SpriteComponent *sprite)
 {
 	// (We can't swap because it ruins ordering)
 	auto iter = std::find(mSprites.begin(), mSprites.end(), sprite);
 	mSprites.erase(iter);
 }
 
-Enemy* Game::GetNearestEnemy(const Vector2& pos)
+Enemy *Game::GetNearestEnemy(const Vector2 &pos)
 {
-	Enemy* best = nullptr;
-	
+	Enemy *best = nullptr;
+
 	if (mEnemies.size() > 0)
 	{
-		best = mEnemies[0];
-		// Save the distance squared of first enemy, and test if others are closer
-		float bestDistSq = (pos - mEnemies[0]->GetPosition()).LengthSq();
+		float bestDistSq = Math::Infinity;
+
 		for (size_t i = 1; i < mEnemies.size(); i++)
 		{
-			float newDistSq = (pos - mEnemies[i]->GetPosition()).LengthSq();
-			if (newDistSq < bestDistSq)
+			if (mEnemies[i]->IsAllowTargeting())
 			{
-				bestDistSq = newDistSq;
-				best = mEnemies[i];
+				float newDistSq = (pos - mEnemies[i]->GetPosition()).LengthSq();
+				if (newDistSq < bestDistSq)
+				{
+					bestDistSq = newDistSq;
+					best = mEnemies[i];
+
+					mEnemies[i]->LockedOnLog("nearest");
+				}
 			}
 		}
 	}
-	
+
 	return best;
 }
