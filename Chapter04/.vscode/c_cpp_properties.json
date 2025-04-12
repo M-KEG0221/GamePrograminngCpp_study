@@ -3,10 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                // "${workspaceFolder}/**",
-                // "${workspaceFolder}/inc",
-                // "C:/SDL2/include",
-                "../External/SDL/include" //Chapter4をカレントとした相対パス（Game.hがincludeしているSDL.hの場所）
+                "${workspaceFolder}/",
+                "../External/SDL/include"
             ],
             "defines": [],
             "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.37.32822/bin/Hostx64/x64/cl.exe",
@@ -16,4 +14,4 @@
         }
     ],
     "version": 4
-} 
+}
