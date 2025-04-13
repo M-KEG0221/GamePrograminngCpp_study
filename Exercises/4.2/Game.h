@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
+//
 // Released under the BSD License
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
@@ -22,35 +22,41 @@ public:
 	void RunLoop();
 	void Shutdown();
 
-	void AddActor(class Actor* actor);
-	void RemoveActor(class Actor* actor);
+	void AddActor(class Actor *actor);
+	void RemoveActor(class Actor *actor);
 
-	void AddSprite(class SpriteComponent* sprite);
-	void RemoveSprite(class SpriteComponent* sprite);
-	
-	SDL_Texture* GetTexture(const std::string& fileName);
+	void AddSprite(class SpriteComponent *sprite);
+	void RemoveSprite(class SpriteComponent *sprite);
+
+	SDL_Texture *GetTexture(const std::string &fileName);
 	// Helper to draw a texture without sprite components
-	void DrawTexture(SDL_Texture* texture, const Vector2& pos, const Vector2& size);
+	void DrawTexture(SDL_Texture *texture, const Vector2 &pos, const Vector2 &size);
+
+	static const int M_BOARD_MARGIN_LEFT_AND_RIGHT = 64;
+	
+	static const int M_BOARD_MARGIN_LEFT_AND_RIGHT = 64;
+	static constexpr float M_BOARD_CELL_SIZE = 128.0f;
+	
 private:
 	void ProcessInput();
 	void UpdateGame();
 	void GenerateOutput();
 	void LoadData();
 	void UnloadData();
-	
+
 	// Map of textures loaded
-	std::unordered_map<std::string, SDL_Texture*> mTextures;
+	std::unordered_map<std::string, SDL_Texture *> mTextures;
 
 	// All the actors in the game
-	std::vector<class Actor*> mActors;
+	std::vector<class Actor *> mActors;
 	// Any pending actors
-	std::vector<class Actor*> mPendingActors;
+	std::vector<class Actor *> mPendingActors;
 
 	// All the sprite components drawn
-	std::vector<class SpriteComponent*> mSprites;
+	std::vector<class SpriteComponent *> mSprites;
 
-	SDL_Window* mWindow;
-	SDL_Renderer* mRenderer;
+	SDL_Window *mWindow;
+	SDL_Renderer *mRenderer;
 	Uint32 mTicksCount;
 	bool mIsRunning;
 	// Track if we're updating actors right now

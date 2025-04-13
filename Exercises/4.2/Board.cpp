@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------
 // From Game Programming in C++ by Sanjay Madhav
 // Copyright (C) 2017 Sanjay Madhav. All rights reserved.
-// 
+//
 // Released under the BSD License
 // See LICENSE in root directory for full details.
 // ----------------------------------------------------------------
@@ -20,9 +20,9 @@ BoardState::BoardState()
 	}
 }
 
-std::vector<BoardState*> BoardState::GetPossibleMoves(SquareState player) const
+std::vector<BoardState *> BoardState::GetPossibleMoves(SquareState player) const
 {
-	std::vector<BoardState*> retVal;
+	std::vector<BoardState *> retVal;
 
 	// For each column, find if a move is possible
 	for (int col = 0; col < 7; col++)
@@ -190,7 +190,7 @@ float BoardState::CalculateHeuristic() const
 	return 0.0f;
 }
 
-bool TryPlayerMove(BoardState* state, int column)
+bool TryPlayerMove(BoardState *state, int column)
 {
 	// Find the first row in that column that's available
 	// (if any)
@@ -206,10 +206,14 @@ bool TryPlayerMove(BoardState* state, int column)
 	return false;
 }
 
-void CPUMove(BoardState* state)
+void CPUMove(BoardState *state)
 {
+	/*
+	‚±‚±‚ª•ÏX‘ÎÛ
+	 */
+
 	// For now, this just randomly picks one of the possible moves
-	std::vector<BoardState*> moves = state->GetPossibleMoves(BoardState::Red);
+	std::vector<BoardState *> moves = state->GetPossibleMoves(BoardState::Red);
 
 	int index = Random::GetIntRange(0, moves.size() - 1);
 
