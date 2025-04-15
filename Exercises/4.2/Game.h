@@ -33,10 +33,8 @@ public:
 	void DrawTexture(SDL_Texture *texture, const Vector2 &pos, const Vector2 &size);
 
 	static const int M_BOARD_MARGIN_LEFT_AND_RIGHT = 64;
-	
-	static const int M_BOARD_MARGIN_LEFT_AND_RIGHT = 64;
 	static constexpr float M_BOARD_CELL_SIZE = 128.0f;
-	
+
 private:
 	void ProcessInput();
 	void UpdateGame();
